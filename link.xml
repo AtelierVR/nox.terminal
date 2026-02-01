@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<linker>
+	<assembly fullname="Nox.Mods.Terminal" preserve="all" />
+	<assembly fullname="Nox.Terminal" preserve="all" />
+	<assembly fullname="Nox.Terminal.Runtime" preserve="all" />
+</linker>

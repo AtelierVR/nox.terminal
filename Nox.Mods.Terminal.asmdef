@@ -1,0 +1,21 @@
+{
+  "name": "Nox.Mods.Terminal",
+  "rootNamespace": "Nox.Mods.Terminal",
+  "references": [
+    "Nox.CCK",
+    "UniTask",
+    "Nox.Terminal",
+    "Nox.KeyBindings",
+    "Nox.UI",
+    "Unity.TextMeshPro"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776389e82c640c44086d3baf10dd1c7b, type: 3}
+  m_Name: lang
+  m_EditorClassIdentifier: Nox.CCK::Nox.CCK.Language.LanguagePack
+  languages:
+  - IETF: en-US
+    entries:
+    - key: terminal.command.help.no_help
+      value: "No help available for this command."
+    - key: terminal.command.help.content
+      value: "Name:\n  {0}\nDescription:\n  {1}\nUsage:\n  {2}"
+    - key: terminal.command.help.list_header
+      value: "{0} available commands:"
+    - key: terminal.command.help.list_item
+      value: " - {0} - {1}"
+    - key: terminal.command.not_found
+      value: "Command not found."
+    - key: terminal.command.executing
+      value: "\n> {0}"
+    - key: terminal.page.title
+      value: "{0}"
+    - key: terminal.page.title.default
+      value: "Terminal"
+    - key: terminal.command.help.no_commands
+      value: "No commands available."
+    - key: terminal.command.getenv.label
+      value: "Environment variable '{0}' is '{1}'."
+    - key: terminal.command.setenv.success
+      value: "Environment variable '{0}' set to '{1}'."
+    - key: terminal.command.unsetenv.success
+      value: "Environment variable '{0}' has been removed."
+    - key: terminal.command.title.get
+      value: "The title is '{0}'."
+    - key: terminal.command.title.set
+      value: "The title has been set to '{0}'."
