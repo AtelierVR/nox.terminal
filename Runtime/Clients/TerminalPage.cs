@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Nox.Terminal.Clients {
 	public class TerminalPage : IPage, IContext {
+		// Limites pour éviter les crashs de rendu TextMeshPro
+		private const int MaxLines      = 1000;  // Nombre maximum de lignes
+		private const int MaxCharacters = 16384; // Nombre maximum de caractères (16K)
+		
 		internal static string GetStaticKey()
 			=> "terminal";
 
@@ -72,9 +76,50 @@ namespace Nox.Terminal.Clients {
 			else _environments[key] = value;
 		}
 
+		private void LimitOutputText() {
+			if (!_component || string.IsNullOrEmpty(_component.output.text)) 
+				return;
+
+			var text = _component.output.text;
+			var needsTrimming = false;
+
+			// Vérifier la limite de caractères
+			if (text.Length > MaxCharacters) {
+				needsTrimming = true;
+			}
+
+			// Vérifier la limite de lignes
+			var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+			if (lines.Length > MaxLines) {
+				needsTrimming = true;
+			}
+
+			if (!needsTrimming) return;
+
+			// Garder seulement les dernières lignes/caractères
+			var linesToKeep = Math.Min(lines.Length, MaxLines);
+			var startIndex = lines.Length - linesToKeep;
+			var trimmedText = string.Join(Environment.NewLine, lines, startIndex, linesToKeep);
+
+			// Si toujours trop long, tronquer par caractères
+			if (trimmedText.Length > MaxCharacters) {
+				var excess = trimmedText.Length - MaxCharacters;
+				trimmedText = trimmedText.Substring(excess);
+				
+				// Supprimer les lignes partielles au début
+				var firstNewLine = trimmedText.IndexOf(Environment.NewLine);
+				if (firstNewLine > 0) {
+					trimmedText = trimmedText.Substring(firstNewLine + Environment.NewLine.Length);
+				}
+			}
+
+			_component.output.text = "[...]\n" + trimmedText;
+		}
+
 		public void Print(string message) {
 			if (!_component) return;
 			_component.output.text += message;
+			LimitOutputText();
 			_component.output.ForceMeshUpdate();
 		}
 
