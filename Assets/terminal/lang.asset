@@ -78,4 +78,34 @@ MonoBehaviour:
     - key: terminal.command.get.description
       value: Retrieve and display the value of a specified environment variable.
     - key: terminal.command.unset.description
-      value: Remove a specified environment variable from the current session. 
+      value: Remove a specified environment variable from the current session.
+    - key: terminal.command.config.short
+      value: Manage configuration settings
+    - key: terminal.command.config.description
+      value: Manage configuration settings using JSON values. Supports subcommands to set, get, check existence, or delete configuration values at specific paths.
+    - key: terminal.command.config.usage
+      value: "Usage: config <set|get|has|del> <path> [value]"
+    - key: terminal.command.config.invalid_subcommand
+      value: "Invalid subcommand '{0}'. Use: set, get, has, or del."
+    - key: terminal.command.config.set.usage
+      value: "Usage: config set <path> <json string>"
+    - key: terminal.command.config.set.success
+      value: "Configuration '{0}' set to {1}."
+    - key: terminal.command.config.set.error
+      value: "Error parsing JSON: {0}"
+    - key: terminal.command.config.get.usage
+      value: "Usage: config get <path>"
+    - key: terminal.command.config.get.value
+      value: "Configuration '{0}' is {1}."
+    - key: terminal.command.config.get.not_found
+      value: "Configuration '{0}' not found."
+    - key: terminal.command.config.has.usage
+      value: "Usage: config has <path>"
+    - key: terminal.command.config.has.result
+      value: "Configuration '{0}' exists: {1}."
+    - key: terminal.command.config.del.usage
+      value: "Usage: config del <path>"
+    - key: terminal.command.config.del.success
+      value: "Configuration '{0}' has been deleted."
+    - key: terminal.command.config.del.not_found
+      value: "Configuration '{0}' does not exist." 
