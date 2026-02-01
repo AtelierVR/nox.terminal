@@ -43,3 +43,39 @@ MonoBehaviour:
       value: "The title is '{0}'."
     - key: terminal.command.title.set
       value: "The title has been set to '{0}'."
+    - key: terminal.command.test.short
+      value: A basic test command
+    - key: terminal.command.curl.short
+      value: Fetch content from a URL
+    - key: terminal.command.help.short
+      value: Display command help information
+    - key: terminal.command.title.short
+      value: Get or set the terminal title
+    - key: terminal.command.clear.short
+      value: Clear the terminal screen
+    - key: terminal.command.echo.short
+      value: Display a line of text
+    - key: terminal.command.set.short
+      value: Set an environment variable
+    - key: terminal.command.get.short
+      value: Get an environment variable value
+    - key: terminal.command.unset.short
+      value: Remove an environment variable
+    - key: terminal.command.test.description
+      value: Execute a basic test command to verify the terminal is working correctly.
+    - key: terminal.command.curl.description
+      value: Fetch and display the content from a specified HTTP or HTTPS URL. Shows the response status and body content.
+    - key: terminal.command.help.description
+      value: Display help information about available commands. Use without arguments to list all commands, or specify a command name to get detailed information about that command.
+    - key: terminal.command.title.description
+      value: Get or set the terminal window title. Call without arguments to display the current title, or provide a string to set a new title.
+    - key: terminal.command.clear.description
+      value: Clear all content from the terminal screen, providing a fresh display area.
+    - key: terminal.command.echo.description
+      value: Display the specified text string to the terminal output.
+    - key: terminal.command.set.description
+      value: Set the value of an environment variable. Requires a variable name and value as arguments.
+    - key: terminal.command.get.description
+      value: Retrieve and display the value of a specified environment variable.
+    - key: terminal.command.unset.description
+      value: Remove a specified environment variable from the current session. 
