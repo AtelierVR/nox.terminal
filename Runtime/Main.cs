@@ -31,6 +31,7 @@ namespace Nox.Terminal.Runtime {
 				(0u, new SetEnvCommand()),
 				(0u, new GetEnvCommand()),
 				(0u, new UnsetEnvCommand()),
+				(0u, new ConfigCommand())
 			};
 
 			for (var i = 0; i < _defaultCommands.Length; i++)

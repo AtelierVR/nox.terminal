@@ -6,12 +6,13 @@
     "Nox.Terminal",
     "Nox.CCK",
     "Nox.UI",
-    "Unity.TextMeshPro"
+    "Unity.TextMeshPro",
+    "Newtonsoft.Json"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
-  "overrideReferences": true,
+  "overrideReferences": false,
   "precompiledReferences": [],
   "autoReferenced": true,
   "defineConstraints": [],
