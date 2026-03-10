@@ -88,6 +88,27 @@ namespace Nox.Terminal.Commands {
 			return Array.Empty<string>();
 		}
 
+		private static JToken MaskHidden(JToken token) {
+			switch (token) {
+				case JObject obj: {
+					var masked = new JObject();
+					foreach (var property in obj.Properties())
+						masked[property.Name] = property.Name.StartsWith("_")
+							? new JValue("<hidden>")
+							: MaskHidden(property.Value);
+					return masked;
+				}
+				case JArray arr: {
+					var maskedArr = new JArray();
+					foreach (var item in arr)
+						maskedArr.Add(MaskHidden(item));
+					return maskedArr;
+				}
+				default:
+					return token;
+			}
+		}
+
 		private IEnumerable<string> GetAllPaths(JToken token, string prefix = "") {
 			switch (token) {
 				case JObject obj: {
@@ -188,9 +209,9 @@ namespace Nox.Terminal.Commands {
 						context.PrintLn(LanguageManager.Get("terminal.command.config.get.empty"));
 					context.SetResult(null);
 				} else {
-					var jsonString = allConfig.ToString(Formatting.Indented);
+					var masked = MaskHidden(allConfig);
 					if (printing)
-						context.PrintLn(jsonString);
+						context.PrintLn(masked.ToString(Formatting.Indented));
 					context.SetResult(allConfig);
 				}
 				return true;
@@ -204,7 +225,8 @@ namespace Nox.Terminal.Commands {
 					context.PrintLn(LanguageManager.Get("terminal.command.config.get.not_found", new object[] { path }));
 				context.SetResult(null);
 			} else {
-				var jsonString = value.ToString(Formatting.Indented);
+				var masked = MaskHidden(value);
+				var jsonString = masked.ToString(Formatting.Indented);
 				if (printing)
 					context.PrintLn(LanguageManager.Get("terminal.command.config.get.value", new object[] { path, jsonString }));
 				context.SetResult(value);
