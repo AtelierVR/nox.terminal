@@ -48,7 +48,8 @@ namespace Nox.Terminal.Commands {
 				if (printing) {
 					context.PrintLn($"Response Status: {(int)response.StatusCode} {response.ReasonPhrase}");
 					context.PrintLn("Response Body:");
-					context.PrintLn(content);
+					// Escape '<' so TMP does not try to parse HTML/XML tags as rich-text tags
+					context.PrintLn(content.Replace("<", "\\<"));
 				}
 
 				context.SetResult(content);

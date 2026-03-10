@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Nox.UI;
 using UnityEngine;
+using Logger = Nox.CCK.Utils.Logger;
 
 namespace Nox.Terminal.Clients {
 	public class TerminalPage : IPage, IContext {
-		// Limites pour éviter les crashs de rendu TextMeshPro
-		private const int MaxLines      = 1000;  // Nombre maximum de lignes
-		private const int MaxCharacters = 16384; // Nombre maximum de caractères (16K)
-		
+		// Limite pour éviter les crashs de rendu TextMeshPro
+		// TMP's internal parsing buffer crashes with very large strings; keep well below that threshold.
+		private const int MaxCharacters = 8192; // Nombre maximum de caractères (8K)
+
 		internal static string GetStaticKey()
 			=> "terminal";
 
@@ -33,24 +34,25 @@ namespace Nox.Terminal.Clients {
 			};
 		}
 
-		private int               _mId;
-		private object[]          _context;
-		private GameObject        _content;
+		private int _mId;
+		private object[] _context;
+		private GameObject _content;
 		private TerminalComponent _component;
 
 		private readonly Dictionary<string, object> _environments = new();
 
-		internal string   _draft = string.Empty;
-		internal string[] _auto  = Array.Empty<string>();
+		internal string _draft = string.Empty;
+		internal string[] _auto = Array.Empty<string>();
 
 		private readonly List<string> _commandHistory = new();
-		private          int          _historyIndex   = -1;
+		private int _historyIndex = -1;
 
 		public object[] GetContext()
 			=> _context;
 
 		public GameObject GetContent(RectTransform parent) {
-			if (_content) return _content;
+			if (_content)
+				return _content;
 			(_content, _component) = TerminalComponent.Generate(this, parent);
 			return _content;
 		}
@@ -72,62 +74,85 @@ namespace Nox.Terminal.Clients {
 
 		public void SetEnvironment(string key, object value) {
 			key = key.ToUpperInvariant();
-			if (value == null) _environments.Remove(key);
-			else _environments[key] = value;
+			if (value == null)
+				_environments.Remove(key);
+			else
+				_environments[key] = value;
 		}
 
-		private void LimitOutputText() {
-			if (!_component || string.IsNullOrEmpty(_component.output.text)) 
-				return;
+		private const string OutputEllipsis = "[...]";
 
-			var text = _component.output.text;
-			var needsTrimming = false;
+		/// <summary>
+		/// Sanitize text after truncation to avoid TMP crashes in ValidateHtmlTag:
+		///   - Orphan '>' at the start  → skip past it  (cut in the middle of a tag body: "FF0000>text")
+		///   - Unclosed '<' at the end  → trim from it  (cut while opening a tag: "text <color=#FF")
+		/// Both cases make TMP read out-of-bounds when it tries to parse the incomplete tag.
+		/// </summary>
+		private static string SanitizeTruncated(string text) {
+			if (string.IsNullOrEmpty(text))
+				return text;
 
-			// Vérifier la limite de caractères
-			if (text.Length > MaxCharacters) {
-				needsTrimming = true;
+			// -- tail: remove unclosed '<' tag at the end --
+			var lastOpen = text.LastIndexOf('<');
+			if (lastOpen >= 0) {
+				var closeAfter = text.IndexOf('>', lastOpen);
+				if (closeAfter < 0) // '<' has no matching '>' → incomplete tag at end
+					text = lastOpen > 0 ? text.Substring(0, lastOpen) : string.Empty;
 			}
 
-			// Vérifier la limite de lignes
-			var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-			if (lines.Length > MaxLines) {
-				needsTrimming = true;
+			if (string.IsNullOrEmpty(text))
+				return text;
+
+			// -- head: remove orphan '>' left by a tag that started before the cut point --
+			var firstOpen  = text.IndexOf('<');
+			var firstClose = text.IndexOf('>');
+			if (firstClose >= 0 && (firstOpen < 0 || firstClose < firstOpen)) {
+				var skip = firstClose + 1;
+				text = skip < text.Length ? text.Substring(skip) : string.Empty;
 			}
 
-			if (!needsTrimming) return;
-
-			// Garder seulement les dernières lignes/caractères
-			var linesToKeep = Math.Min(lines.Length, MaxLines);
-			var startIndex = lines.Length - linesToKeep;
-			var trimmedText = string.Join(Environment.NewLine, lines, startIndex, linesToKeep);
-
-			// Si toujours trop long, tronquer par caractères
-			if (trimmedText.Length > MaxCharacters) {
-				var excess = trimmedText.Length - MaxCharacters;
-				trimmedText = trimmedText.Substring(excess);
-				
-				// Supprimer les lignes partielles au début
-				var firstNewLine = trimmedText.IndexOf(Environment.NewLine);
-				if (firstNewLine > 0) {
-					trimmedText = trimmedText.Substring(firstNewLine + Environment.NewLine.Length);
-				}
-			}
-
-			_component.output.text = "[...]\n" + trimmedText;
+			return text;
 		}
 
 		public void Print(string message) {
-			if (!_component) return;
-			_component.output.text += message;
-			LimitOutputText();
-			_component.output.ForceMeshUpdate();
+			if (!_component)
+				return;
+
+			// Si le message lui-même est plus grand que la limite, on ne garde que sa fin
+			// (évite une allocation géante lors de la concaténation).
+			if (message.Length > MaxCharacters)
+				message = message.Substring(message.Length - MaxCharacters);
+
+			// Récupère le contenu brut (sans le préfixe [...] si présent)
+			var current = _component.output.text;
+			if (current.StartsWith(OutputEllipsis))
+				current = current.Substring(OutputEllipsis.Length);
+
+			// La concaténation est maintenant bornée à 2×MaxCharacters au pire
+			var full = current + message;
+
+			if (full.Length > MaxCharacters) {
+				// Garde uniquement les MaxCharacters derniers caractères
+				var tail = SanitizeTruncated(full.Substring(full.Length - MaxCharacters));
+				_component.output.text = OutputEllipsis + tail;
+			} else {
+				_component.output.text = full;
+			}
+
+			try {
+				_component.output.ForceMeshUpdate();
+			} catch (Exception ex) {
+				Logger.LogWarning(new Exception($"Failed to update TMP mesh for terminal output.", ex));
+				// Ignore TMP overflow errors; the truncation logic should prevent them, but just in case.
+			}
 		}
 
 		public void PrintLn(string message)
 			=> Print(message + Environment.NewLine);
 
 		public void Clear() {
-			if (!_component) return;
+			if (!_component)
+				return;
 			_component.output.text = string.Empty;
 			_component.output.ForceMeshUpdate();
 		}
@@ -153,7 +178,8 @@ namespace Nox.Terminal.Clients {
 			=> SetEnvironment("print_executing", printing);
 
 		public void AddToHistory(string command) {
-			if (string.IsNullOrWhiteSpace(command)) return;
+			if (string.IsNullOrWhiteSpace(command))
+				return;
 
 			if (_commandHistory.Count > 0 && _commandHistory[^1] == command)
 				return;
@@ -169,8 +195,8 @@ namespace Nox.Terminal.Clients {
 			if (_historyIndex > 0)
 				_historyIndex--;
 
-			return _historyIndex < _commandHistory.Count 
-				? _commandHistory[_historyIndex] 
+			return _historyIndex < _commandHistory.Count
+				? _commandHistory[_historyIndex]
 				: string.Empty;
 		}
 
