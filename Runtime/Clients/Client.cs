@@ -46,7 +46,7 @@ namespace Nox.Terminal.Clients {
 			if (TerminalPage.GetStaticKey() == key)
 				page = TerminalPage.OnGotoAction(menu, context.Data[2..]);
 			if (page == null) return;
-			Main.Instance.CoreAPI.EventAPI.Emit("menu_display", menu.GetId(), page);
+			Main.Instance.CoreAPI.EventAPI.Emit("menu_display", menu.Id, page);
 		}
 
 		private void OnWidgetRequest(EventData context) {

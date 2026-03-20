@@ -28,7 +28,7 @@ namespace Nox.Terminal.Clients {
 
 		internal static IPage OnGotoAction(IMenu menu, object[] context) {
 			return new TerminalPage {
-				_mId     = menu.GetId(),
+				_mId     = menu.Id,
 				_context = context,
 				_draft   = T(context, 0, out string draft) ? draft : null
 			};
