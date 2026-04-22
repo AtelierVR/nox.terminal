@@ -112,7 +112,7 @@ namespace Nox.Terminal.Clients {
 
 			var component = content.AddComponent<TerminalComponent>();
 			component._page = page;
-			content.name    = $"[{page.GetKey()}_{content.GetInstanceID()}]";
+			content.name    = $"[{page.GetKey()}_{content.GetEntityId().GetHashCode()}]";
 			var splitContent = Reference.GetComponent<RectTransform>("content", content);
 
 			// generate dashboard

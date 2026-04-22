@@ -61,7 +61,7 @@ namespace Nox.Terminal.Clients {
 			=> Client.UiAPI.Get<IMenu>(_mId);
 
 		public int GetId()
-			=> _component.GetInstanceID();
+			=> _component.GetEntityId().GetHashCode();
 
 		public Dictionary<string, object> GetEnvironments()
 			=> _environments;
