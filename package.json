@@ -1,5 +1,6 @@
 {
   "name": "nox.terminal",
-  "displayName": "Nox - Terminals",
-  "version": "1.0.0"
+  "displayName": "Nox - Terminal",
+  "version": "1.0.0",
+  "description": "In-game terminal console and command-line interface."
 }

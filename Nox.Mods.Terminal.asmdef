@@ -5,7 +5,7 @@
     "Nox.CCK",
     "UniTask",
     "Nox.Terminal",
-    "Nox.KeyBindings",
+    "Nox.KeyBinding",
     "Nox.UI",
     "Unity.TextMeshPro"
   ],

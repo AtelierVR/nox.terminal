@@ -5,9 +5,9 @@
     "fr.hactazia.terminal",
     "terminal"
   ],
-  "name": "Terminal Mod",
+  "name": "Terminal",
   "version": "1.0.0",
-  "description": "Provides a terminal interface for the game.",
+  "description": "In-game terminal console and command-line interface.",
   "license": "GPL-3.0",
   "icon": null,
   "contact": {
