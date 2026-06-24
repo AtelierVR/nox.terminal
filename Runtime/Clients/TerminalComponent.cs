@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using Nox.CCK.Language;
 using Nox.CCK.Utils;
@@ -62,12 +63,14 @@ namespace Nox.Terminal.Clients {
 					)
 				);
 
-			if (await Main.Instance.Execute(command.Trim(), _page)) {
-				Logger.LogDebug($"Command executed: {command}");
+			var substituted = SubstituteVariables(command);
+
+			if (await Main.Instance.Execute(substituted.Trim(), _page)) {
+				Logger.LogDebug($"Command executed: {command} => {substituted}");
 			} else {
 				if (printExecuting)
 					_page.PrintLn(LanguageManager.Get("terminal.command.not_found"));
-				Logger.LogWarning($"Command execution failed: {command}");
+				Logger.LogWarning($"Command execution failed: {command} => {substituted}");
 			}
 
 			input.text         = string.Empty;
@@ -108,6 +111,15 @@ namespace Nox.Terminal.Clients {
 			}
 		}
 
+
+		private static readonly Regex _varRegex = new(@"\$(\w+)", RegexOptions.Compiled);
+
+		private string SubstituteVariables(string command) 
+			=> _varRegex.Replace(command, match => {
+				var key = match.Groups[1].Value;
+				var value = _page.GetEnvironment<string>(key);
+				return value ?? match.Value;
+			});
 
 		public static (GameObject, TerminalComponent) Generate(TerminalPage page, RectTransform parent) {
 			var content = Instantiate(Client.GetAsset<GameObject>("ui:prefabs/split.prefab"), parent);
