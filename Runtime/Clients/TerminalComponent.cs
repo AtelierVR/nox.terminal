@@ -114,11 +114,11 @@ namespace Nox.Terminal.Clients {
 
 		private static readonly Regex _varRegex = new(@"\$(\w+)", RegexOptions.Compiled);
 
-		private string SubstituteVariables(string command) 
+		private string SubstituteVariables(string command)
 			=> _varRegex.Replace(command, match => {
 				var key = match.Groups[1].Value;
-				var value = _page.GetEnvironment<string>(key);
-				return value ?? match.Value;
+				var value = _page.GetEnvironment<object>(key);
+				return value?.ToString() ?? match.Value;
 			});
 
 		public static (GameObject, TerminalComponent) Generate(TerminalPage page, RectTransform parent) {
