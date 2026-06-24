@@ -18,7 +18,7 @@ namespace Nox.Terminal.Commands {
 			=> $"{CommandWithPrefix}";
 
 		private string CommandWithPrefix
-			=> $"{CommandManager.CommandPrefix}{GetName()}";
+			=> GetName();
 
 		public string[] AutoComplete(string input, IContext context = null)
 			=> CommandWithPrefix.StartsWith(input.ToLower())

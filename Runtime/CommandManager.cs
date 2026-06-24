@@ -12,8 +12,6 @@ namespace Nox.Terminal.Runtime {
 		private uint NextId
 			=> _nextId == uint.MaxValue ? _nextId = 0 : ++_nextId;
 
-		public const string CommandPrefix = "/";
-
 		public uint Register(ICommand command) {
 			if (command == null) return uint.MaxValue;
 			var id = NextId;

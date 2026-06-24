@@ -1,10 +1,10 @@
 using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Nox.CCK.Language;
 using Nox.CCK.Utils;
 using Nox.Terminal.Runtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Logger = Nox.CCK.Utils.Logger;
 
@@ -50,7 +50,7 @@ namespace Nox.Terminal.Clients {
 			input.interactable = false;
 
 			command = command.Trim();
-			
+
 			_page.AddToHistory(command);
 			var printExecuting = _page.CanPrinting();
 
@@ -79,11 +79,11 @@ namespace Nox.Terminal.Clients {
 		private void OnValueChanged(string value) {
 			if (!string.IsNullOrEmpty(value)) 
 				_page.ResetHistoryIndex();
-			
+
 			_page._auto = !string.IsNullOrEmpty(value)
 				? Main.Instance.AutoComplete(value, _page)
 				: Array.Empty<string>();
-			
+
 			Logger.LogDebug($"Autocomplete: {string.Join(", ", _page._auto)}");
 		}
 
@@ -93,13 +93,15 @@ namespace Nox.Terminal.Clients {
 		}
 
 		private void HandleHistoryNavigation() {
-			if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			if (Keyboard.current == null) return;
+
+			if (Keyboard.current.upArrowKey.wasPressedThisFrame) {
 				var previousCommand = _page.GetPreviousCommand();
 				if (string.IsNullOrEmpty(previousCommand)) return;
 				input.text          = previousCommand;
 				input.caretPosition = input.text.Length;
 			}
-			else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+			else if (Keyboard.current.downArrowKey.wasPressedThisFrame) {
 				var nextCommand = _page.GetNextCommand();
 				input.text = nextCommand;
 				input.caretPosition = input.text.Length;

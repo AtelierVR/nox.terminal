@@ -6,12 +6,6 @@ namespace Nox.Terminal {
 	/// </summary>
 	public interface ITerminalAPI {
 		/// <summary>
-		/// Get the prefix of the terminal.
-		/// </summary>
-		/// <returns></returns>
-		public string GetPrefix();
-
-		/// <summary>
 		/// Get the registered commands.
 		/// </summary>
 		/// <returns></returns>

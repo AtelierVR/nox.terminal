@@ -108,4 +108,20 @@ MonoBehaviour:
     - key: terminal.command.config.del.success
       value: "Configuration '{0}' has been deleted."
     - key: terminal.command.config.del.not_found
-      value: "Configuration '{0}' does not exist." 
+      value: "Configuration '{0}' does not exist."
+    - key: terminal.command.mods.short
+      value: Manage loaded mods
+    - key: terminal.command.mods.description
+      value: Manage and inspect loaded mods. Use list to see all mods, or get to view details about a specific mod.
+    - key: terminal.command.mods.usage
+      value: "Usage: mods <list|get> [id]"
+    - key: terminal.command.mods.invalid_subcommand
+      value: "Invalid subcommand '{0}'. Use: list or get."
+    - key: terminal.command.mods.list.empty
+      value: No mods are currently loaded.
+    - key: terminal.command.mods.list.header
+      value: "{0} loaded mods:"
+    - key: terminal.command.mods.get.usage
+      value: "Usage: mods get <id>"
+    - key: terminal.command.mods.get.not_found
+      value: "Mod '{0}' not found." 

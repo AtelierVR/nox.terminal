@@ -31,7 +31,8 @@ namespace Nox.Terminal.Runtime {
 				(0u, new SetEnvCommand()),
 				(0u, new GetEnvCommand()),
 				(0u, new UnsetEnvCommand()),
-				(0u, new ConfigCommand())
+				(0u, new ConfigCommand()),
+				(0u, new ModsCommand())
 			};
 
 			for (var i = 0; i < _defaultCommands.Length; i++)
@@ -64,8 +65,5 @@ namespace Nox.Terminal.Runtime {
 
 		public void Unregister(uint id)
 			=> _manager.Unregister(id);
-
-		public string GetPrefix()
-			=> CommandManager.CommandPrefix;
 	}
 }

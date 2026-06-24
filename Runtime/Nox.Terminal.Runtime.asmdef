@@ -7,7 +7,8 @@
     "Nox.CCK",
     "Nox.UI",
     "Unity.TextMeshPro",
-    "Newtonsoft.Json"
+    "Newtonsoft.Json",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

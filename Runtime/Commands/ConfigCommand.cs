@@ -23,7 +23,7 @@ namespace Nox.Terminal.Commands {
 			=> $"{CommandWithPrefix} <set|get|has|del> [path] [value]";
 
 		private string CommandWithPrefix
-			=> $"{CommandManager.CommandPrefix}{GetName()}";
+			=> GetName();
 
 		private readonly string[] _subCommands = { "set", "get", "has", "del" };
 
