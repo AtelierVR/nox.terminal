@@ -28,6 +28,11 @@
       "id": "ui",
       "type": "depends",
       "version": ">=1.0.0"
+    },
+    {
+      "id": "com.unity.inputsystem",
+      "type": "depends",
+      "register": "upm:1.19.0"
     }
   ],
   "entrypoints": {
