@@ -6,7 +6,7 @@
     "terminal"
   ],
   "name": "Terminal",
-  "version": "1.0.0",
+  "version": "1.0.x",
   "description": "In-game terminal console and command-line interface.",
   "license": "GPL-3.0",
   "icon": null,
