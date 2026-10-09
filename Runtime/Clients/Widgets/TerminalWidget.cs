@@ -34,7 +34,7 @@ namespace Nox.Terminal.Widgets {
 
 			var button = Reference.GetComponent<Button>("button", instance);
 			button.onClick.AddListener(component.OnClick);
-			instance.name = $"[{component.GetKey()}_{instance.GetEntityId().GetHashCode()}]";
+			instance.name = $"[{component.GetKey()}_{instance.GetId()}]";
 			values        = (instance, component);
 
 			prefab             = Client.GetAsset<GameObject>("ui:prefabs/widget.prefab");

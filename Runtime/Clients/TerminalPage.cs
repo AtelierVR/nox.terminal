@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Nox.CCK.Utils;
 using Nox.UI;
 using UnityEngine;
 using Logger = Nox.CCK.Utils.Logger;
@@ -61,7 +62,7 @@ namespace Nox.Terminal.Clients {
 			=> Client.UiAPI.Get<IMenu>(_mId);
 
 		public int GetId()
-			=> _component.GetEntityId().GetHashCode();
+			=> _component.GetId();
 
 		public Dictionary<string, object> GetEnvironments()
 			=> _environments;
