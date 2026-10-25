@@ -35,6 +35,12 @@ MonoBehaviour:
       value: "No commands available."
     - key: terminal.command.getenv.label
       value: "Environment variable '{0}' is '{1}'."
+    - key: terminal.command.getenv.empty
+      value: "No environment variable is set."
+    - key: terminal.command.getenv.list_header
+      value: "{0} environment variable(s):"
+    - key: terminal.command.getenv.list_item
+      value: " - {0} = {1}"
     - key: terminal.command.setenv.success
       value: "Environment variable '{0}' set to '{1}'."
     - key: terminal.command.unsetenv.success
@@ -125,3 +131,33 @@ MonoBehaviour:
       value: "Usage: mods get <id>"
     - key: terminal.command.mods.get.not_found
       value: "Mod '{0}' not found." 
+    - key: terminal.command.lang.short
+      value: "Get or change the language"
+    - key: terminal.command.lang.description
+      value: "Display the current language and the ones available, or switch to another one. Use 'lang <language>' (e.g. 'lang fr-FR'), the 'language' alias is also accepted."
+    - key: terminal.command.lang.current
+      value: "Current language: {0}. Available: {1}."
+    - key: terminal.command.lang.set
+      value: "Language set to '{0}'."
+    - key: terminal.command.lang.not_found
+      value: "Language '{0}' is not available. Available: {1}."
+    - key: terminal.editor.title
+      value: "Terminal"
+    - key: terminal.editor.label
+      value: "Tools/Terminal"
+    - key: terminal.editor.input
+      value: "Command"
+    - key: terminal.editor.placeholder
+      value: "Type a command, Tab to complete, Enter to run"
+    - key: terminal.editor.execute
+      value: "Run"
+    - key: terminal.editor.clear
+      value: "Clear"
+    - key: terminal.editor.unknown
+      value: "Unknown command: {0}"
+    - key: terminal.editor.hint
+      value: "Unknown command, run 'help' to list them."
+    - key: terminal.editor.ready
+      value: "Terminal ready, {0} command(s) registered."
+    - key: terminal.editor.autocomplete
+      value: "{0} suggestion(s): {1}"
