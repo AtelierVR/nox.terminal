@@ -1,0 +1,23 @@
+{
+    "name": "Nox.Terminal.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Nox.CCK",
+        "Nox.CCK.Editor",
+        "Nox.Terminal",
+        "Nox.Terminal.Runtime",
+        "Nox.Editor.Panel",
+        "UniTask"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

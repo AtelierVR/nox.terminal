@@ -40,6 +40,10 @@
     "main": [
       "Nox.Terminal.Runtime.Main"
     ],
+    "editor": [
+      "Nox.Terminal.Editor.EditorTerminal",
+      "Nox.Terminal.Editor.TerminalPanel"
+    ],
     "client": [
       "Nox.Terminal.Clients.Client"
     ]
