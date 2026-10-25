@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using Nox.CCK.Language;
 using Nox.CCK.Utils;
+using Nox.Terminal.Commands;
 using Nox.Terminal.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -152,7 +153,11 @@ namespace Nox.Terminal.Clients {
 			component.labelIcon.sprite = Client.GetAsset<Sprite>("ui:icons/terminal.png");
 			component.label.UpdateText(
 				"terminal.page.title",
-				new[] { LanguageManager.Get("terminal.page.title.default") }
+				new[] {
+					string.IsNullOrEmpty(TitleCommand.DefaultTitle)
+						? LanguageManager.Get("terminal.page.title.default")
+						: TitleCommand.DefaultTitle
+				}
 			);
 
 			var terminal = Instantiate(

@@ -21,6 +21,12 @@ namespace Nox.Terminal.Commands {
 		private string CommandWithPrefix
 			=> GetName();
 
+		/// <summary>
+		/// Title used when no terminal is attached (command run outside a terminal), and applied
+		/// by the next terminal page that opens.
+		/// </summary>
+		public static string DefaultTitle { get; private set; } = string.Empty;
+
 		public string[] AutoComplete(string input, IContext context = null)
 			=> CommandWithPrefix.StartsWith(input.ToLower())
 				? new[] { CommandWithPrefix }
@@ -30,28 +36,31 @@ namespace Nox.Terminal.Commands {
 			=> UniTask.FromResult(ExecuteInternal(input, context));
 
 		private bool ExecuteInternal(string input, IContext context = null) {
-			if (string.IsNullOrWhiteSpace(input) || context == null)
+			if (string.IsNullOrWhiteSpace(input))
 				return false;
 
 			var parts = input.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			if (!parts[0].Equals(CommandWithPrefix, StringComparison.OrdinalIgnoreCase))
 				return false;
 
-			var printExecuting = context.CanPrinting();
+			// Without a terminal the title is only remembered, so the next page opens with it.
+			var title = parts.Length == 1
+				? context?.GetTitle() ?? DefaultTitle
+				: string.Join(' ', parts.Skip(1));
 
-			if (parts.Length == 1) {
-				if (printExecuting)
-					context.PrintLn(LanguageManager.Get($"terminal.command.{GetName()}.get", new object[] { context.GetTitle() }));
-				context.SetResult(context.GetTitle());
-				return true;
+			if (parts.Length > 1) {
+				DefaultTitle = title;
+				context?.SetTitle(title);
 			}
 
-			context.SetTitle(string.Join(' ', parts.Skip(1)));
-			if (printExecuting)
-				context.PrintLn(LanguageManager.Get($"terminal.command.{GetName()}.set", new object[] { context.GetTitle() }));
-			
-			context.SetResult(context.GetTitle());
-			
+			if (context?.CanPrinting() ?? false)
+				context.PrintLn(LanguageManager.Get(
+					$"terminal.command.{GetName()}.{(parts.Length == 1 ? "get" : "set")}",
+					new object[] { title }
+				));
+
+			context?.SetResult(title);
+
 			return true;
 		}
 	}
