@@ -26,10 +26,17 @@ namespace Nox.Terminal.Commands {
 				: Array.Empty<string>();
 
 		public UniTask<bool> Execute(string input, IContext context = null) {
-			if (input.ToLower() != CommandWithPrefix)
+			if (string.IsNullOrWhiteSpace(input))
 				return UniTask.FromResult(false);
 
+			var parts = input.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			if (!parts[0].Equals(CommandWithPrefix, StringComparison.OrdinalIgnoreCase))
+				return UniTask.FromResult(false);
+
+			// Works without a terminal: there is simply nothing to clear.
 			context?.Clear();
+			context?.SetResult(null);
+
 			return UniTask.FromResult(true);
 		}
 	}
