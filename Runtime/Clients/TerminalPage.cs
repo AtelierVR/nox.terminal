@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nox.CCK.Utils;
+using Nox.Terminal.Runtime;
 using Nox.UI;
 using UnityEngine;
 using Logger = Nox.CCK.Utils.Logger;
@@ -46,7 +47,8 @@ namespace Nox.Terminal.Clients {
 		internal string[] _auto = Array.Empty<string>();
 
 		private readonly List<string> _commandHistory = new();
-		private int _historyIndex = -1;
+		private int  _historyIndex = -1;
+		private bool _historyLoaded;
 
 		public object[] GetContext()
 			=> _context;
@@ -178,18 +180,38 @@ namespace Nox.Terminal.Clients {
 		public void SetPrinting(bool printing)
 			=> SetEnvironment("print_executing", printing);
 
+		/// <summary>Reads <c>history.txt</c> once, the first time the history is touched.</summary>
+		private void EnsureHistoryLoaded() {
+			if (_historyLoaded)
+				return;
+
+			_historyLoaded = true;
+			_commandHistory.AddRange(CommandHistory.Load());
+			_historyIndex = _commandHistory.Count;
+		}
+
 		public void AddToHistory(string command) {
 			if (string.IsNullOrWhiteSpace(command))
 				return;
 
-			if (_commandHistory.Count > 0 && _commandHistory[^1] == command)
+			EnsureHistoryLoaded();
+
+			if (_commandHistory.Count > 0 && _commandHistory[^1] == command) {
+				_historyIndex = _commandHistory.Count;
 				return;
+			}
 
 			_commandHistory.Add(command);
 			_historyIndex = _commandHistory.Count;
+
+			// Appended right away (append-only): closing the game cannot lose the session history and
+			// other instances can write to the same file.
+			CommandHistory.Append(command);
 		}
 
 		public string GetPreviousCommand() {
+			EnsureHistoryLoaded();
+
 			if (_commandHistory.Count == 0)
 				return string.Empty;
 
@@ -202,6 +224,8 @@ namespace Nox.Terminal.Clients {
 		}
 
 		public string GetNextCommand() {
+			EnsureHistoryLoaded();
+
 			if (_commandHistory.Count == 0)
 				return string.Empty;
 
@@ -214,7 +238,9 @@ namespace Nox.Terminal.Clients {
 			return string.Empty;
 		}
 
-		public void ResetHistoryIndex()
-			=> _historyIndex = _commandHistory.Count;
+		public void ResetHistoryIndex() {
+			EnsureHistoryLoaded();
+			_historyIndex = _commandHistory.Count;
+		}
 	}
 }
