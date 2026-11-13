@@ -460,7 +460,7 @@ namespace Nox.Terminal.Editor {
 			var whole         = text.Trim();
 			var endsWithSpace = text.EndsWith(' ');
 
-			// A space opens the list of what the current command accepts ("help ", "get ", …).
+			// A space opens the list of what the current command accepts ("help ", "get ", ...).
 			if (!force && string.IsNullOrEmpty(token) && !endsWithSpace) {
 				HideSuggestions();
 				return;

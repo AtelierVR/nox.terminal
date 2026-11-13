@@ -51,7 +51,7 @@ namespace Nox.Terminal.Commands {
 				var partial = parts.Length >= 3 && !input.EndsWith(' ') ? parts[2] : "";
 				var mods = Main.Instance.CoreAPI.ModAPI.GetMods();
 				return mods
-					.Select(m => m.GetMetadata().GetId())
+					.Select(m => m.Metadata.Id)
 					.Where(id => id.StartsWith(partial, StringComparison.OrdinalIgnoreCase))
 					.Select(id => $"{CommandWithPrefix} get {id}")
 					.ToArray();
@@ -106,8 +106,8 @@ namespace Nox.Terminal.Commands {
 			if (printing) {
 				context.PrintLn(LanguageManager.Get("terminal.command.mods.list.header", mods.Length));
 				foreach (var mod in mods) {
-					var meta = mod.GetMetadata();
-					context.PrintLn($"  {meta.GetId()} v{meta.GetVersion()} - {meta.GetName()}");
+					var meta = mod.Metadata;
+					context.PrintLn($"  {meta.Id} v{meta.Version} - {meta.Name}");
 				}
 			}
 
@@ -132,24 +132,24 @@ namespace Nox.Terminal.Commands {
 				return true;
 			}
 
-			var meta = mod.GetMetadata();
+			var meta = mod.Metadata;
 
 			if (printing) {
-				context.PrintLn($"ID:          {meta.GetId()}");
-				context.PrintLn($"Name:        {meta.GetName()}");
-				context.PrintLn($"Version:     {meta.GetVersion()}");
-				context.PrintLn($"Description: {meta.GetDescription()}");
-				context.PrintLn($"License:     {meta.GetLicense()}");
+				context.PrintLn($"ID:          {meta.Id}");
+				context.PrintLn($"Name:        {meta.Name}");
+				context.PrintLn($"Version:     {meta.Version}");
+				context.PrintLn($"Description: {meta.Description}");
+				context.PrintLn($"License:     {meta.License}");
 
-				var authors = meta.GetAuthors();
+				var authors = meta.Authors;
 				if (authors != null && authors.Length > 0)
 					context.PrintLn($"Authors:     {string.Join(", ", authors.Select(a => a.GetName()))}");
 
-				var provides = meta.GetProvides();
+				var provides = meta.Provides;
 				if (provides != null && provides.Length > 0)
 					context.PrintLn($"Provides:    {string.Join(", ", provides)}");
 
-				context.PrintLn($"Loaded:      {mod.IsLoaded()}");
+				context.PrintLn($"Loaded:      {mod.IsLoaded}");
 			}
 
 			context.SetResult(meta);
